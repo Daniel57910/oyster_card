@@ -3,7 +3,7 @@ require 'app'
 describe Card do
 
   subject(:card) { described_class.new } 
-  subject(:card_money) {described_class.new(5)}
+  subject(:card_money) { described_class.new(5) }
   
   it "should automatically set the balance to 0" do
     expect(card.balance).to eq 0
@@ -34,6 +34,10 @@ describe Card do
     it "changes the status of the journey to be true" do
       card_money.touch_in
       expect(card_money.journey?).to eq true
+    end
+    it "saves the previous journey into the history array" do
+      2.times do card_money.touch_in(:Paddington) end
+        expect(card_money.history).to eq [:Paddington, :Paddington]
     end
   end
 

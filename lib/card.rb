@@ -2,11 +2,13 @@ class Card
 
   MAX = 90
   attr_accessor :balance
+  attr_reader :journey, :entry_station, :history
 
   def initialize(balance = 0)
     @balance = balance
     @journey = false
     @station = Station.new
+    @history = []
   end
 
   def top_up(amount)
@@ -14,13 +16,15 @@ class Card
     @balance += amount
   end
 
-  def touch_in
+  def touch_in(entry_station = nil)
     raise not_enough if @balance - @station.cost < 0
-    deduct
     @journey = true
+    @entry_station = entry_station
+    save_history
   end
 
   def touch_out
+     deduct
     @journey = false
   end
 
@@ -41,6 +45,11 @@ class Card
 
   def deduct
     @balance -= @station.cost
+  end
+
+  def save_history
+    @history << @entry_station
+    @history
   end
 
 end
