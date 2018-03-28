@@ -3,7 +3,9 @@ require 'app'
 describe Card do
 
   subject(:card) { described_class.new } 
-  subject(:card_money) { described_class.new(5) }
+  subject(:card_money) { described_class.new(20) }
+  subject(:kings_cross) {double(:station, :name => "Kings Cross", :zone => 1, :cost => 1)}
+  subject(:paddington) {double(:station, :name => "Paddington", :zone => 1, :cost => 1)}
 
   it "should automatically set the balance to 0" do
     expect(card.balance).to eq 0
@@ -23,24 +25,27 @@ describe Card do
   end
 
   describe "#touch_in" do
+
     it "accepts the station and the zone as arguments" do
-      expect(subject).to respond_to(:touch_in).with(2).arguments
+      expect(card).to respond_to(:touch_in).with(1).argument
     end
     it "raises an error if there are insufficient funds on card" do 
-      expect {card.touch_in("Old_St", 1)}.to raise_error "Insufficient funds on card"
+      expect {card.touch_in(kings_cross)}.to raise_error "Insufficient funds on card"
     end
     it "changes the status of the journey to be true" do
-      card_money.touch_in("Old_St", 1)
+      card_money.touch_in(kings_cross)
       expect(card_money.journey).to eq true
     end
   end
 
   describe "#touch_out" do
     before(:each) do
-      card_money.touch_in("Old_St", 1)
-      card_money.touch_out("Kings Cross", 1)
+      card_money.touch_in(kings_cross)
+      card_money.touch_out(paddington)
     end
-    #implicit testing of the private methods
+
+    #create completed journey subject
+    #test rspec against it: https://stackoverflow.com/questions/35125686/expect-the-creation-of-a-new-object
     it "calls the private methods for deducting money and returns the balance" do
       expect(card_money.send(:deduct)).to eq card_money.balance
     end
