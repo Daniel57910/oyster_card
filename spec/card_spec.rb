@@ -31,7 +31,7 @@ describe Card do
     end
     it "changes the status of the journey to be true" do
       card_money.touch_in("Old_St", 1)
-      expect(card_money.journey).to eq false
+      expect(card_money.journey).to eq true
     end
   end
 

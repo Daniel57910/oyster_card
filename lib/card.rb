@@ -17,10 +17,10 @@ class Card
 
   def touch_in(entry_station, zone)
     @entry_station = Station.new
-    raise not_enough if @balance - @entry_station.cost < 0
+    raise not_enough if insufficient_funds?
     @entry_station.name = entry_station
     @entry_station.zone = zone
-    @journey = false
+    @journey = true
   end
 
   def touch_out(exit_station, zone)
@@ -50,9 +50,13 @@ class Card
     @balance -= @exit_station.cost
   end
 
+  def insufficient_funds?
+    @balance - @entry_station.cost < 0
+  end
+
   def save_history
     #look up difference between store and merge
-    @history << ({@entry_station.name => @exit_station.name} )
+    @history << ( {@entry_station.name => @exit_station.name} )
   end
   
 end
