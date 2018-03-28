@@ -2,13 +2,12 @@ class Card
 
   MAX = 90
   attr_accessor :balance
-  attr_reader :journey, :entry_station, :history
+  attr_reader :journey, :entry_station, :exit_station, :history
 
   def initialize(balance = 0)
     @balance = balance
     @journey = false
-    @station = Station.new
-    @history = []
+    @history = {}
   end
 
   def top_up(amount)
@@ -16,22 +15,26 @@ class Card
     @balance += amount
   end
 
-  def touch_in(entry_station = nil)
-    raise not_enough if @balance - @station.cost < 0
-    @journey = true
-    @entry_station = entry_station
-    save_history
+  def touch_in(entry_station, zone)
+    @entry_station = Station.new
+    raise not_enough if @balance - @entry_station.cost < 0
+    @entry_station.name = entry_station
+    @entry_station.zone = zone
+    @journey = false
   end
 
-  def touch_out
-     deduct
+  def touch_out(exit_station, zone)
+    @exit_station = Station.new
+    @exit_station.name = exit_station
+    @exit_station.zone = zone
+    deduct
     @journey = false
+    save_history
   end
 
   def journey?
     @journey
   end
-
 
   private
 
@@ -44,12 +47,12 @@ class Card
   end
 
   def deduct
-    @balance -= @station.cost
+    @balance -= @exit_station.cost
   end
 
   def save_history
-    @history << @entry_station
-    @history
+    #look up difference between store and merge
+    @history.merge!( {@entry_station.name => @exit_station.name} )
   end
-
+  
 end
