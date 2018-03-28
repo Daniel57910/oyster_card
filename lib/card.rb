@@ -7,7 +7,7 @@ class Card
   def initialize(balance = 0)
     @balance = balance
     @journey = false
-    @history = {}
+    @history = []
   end
 
   def top_up(amount)
@@ -52,7 +52,7 @@ class Card
 
   def save_history
     #look up difference between store and merge
-    @history.merge!( {@entry_station.name => @exit_station.name} )
+    @history << ({@entry_station.name => @exit_station.name} )
   end
   
 end
