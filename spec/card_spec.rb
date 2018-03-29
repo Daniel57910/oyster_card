@@ -11,10 +11,6 @@ describe Card do
     expect(card.balance).to eq 0
   end
 
-  it "the hash table should be empty on initialization" do
-    expect(card.history.length).to eq 0
-  end
-
   describe "#top_up" do
     it "allows the user to add a given amount to the card" do
       expect(card.top_up(10)).to eq card.balance
@@ -51,9 +47,10 @@ describe Card do
     it "calls the private methods for deducting money and returns the balance" do
       expect(card_money.send(:deduct)).to eq card_money.balance
     end
-    it "saves the previous journey into the history array" do
-      expect(card_money.send(:save_history)).to eq card_money.history
-    end
+    
+    #it "saves the previous journey into the history array" do
+     # expect(card_money.send(:save_history)).to eq card_money.history
+    #end
     it "changes the status of the journey to be false" do
       expect(card_money.journey).to eq false
     end

@@ -5,7 +5,12 @@ require './lib/app.rb'
 card = Card.new
 card.top_up(66)
 card.balance
-card.top_up(30)
-card.balance
-card.deduct
-card.balance
+ent = Station.new
+ent.name = "Old_St"
+ent.zone = 1
+ex = Station.new
+ex.name = "Padd"
+ex.zone = 1
+
+card.touch_in(ent)
+card.touch_out(ex)

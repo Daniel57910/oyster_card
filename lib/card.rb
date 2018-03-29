@@ -3,12 +3,12 @@ class Card
   MAX = 90
   MAX_CHARGE = 6
   attr_accessor :balance
-  attr_reader :journey, :entry_station, :exit_station, :history
+  attr_reader :journey, :entry_station, :exit_station, :journey_log
 
   def initialize(balance = 0)
     @balance = balance
     @journey = false
-    @history = []
+    @journey_log = Journey_Log.new
   end
 
   def top_up(amount)
@@ -18,17 +18,18 @@ class Card
   end
 
   def touch_in(entry_station)
+    @entry_station = entry_station.name
     raise not_enough if insufficient_funds?
     raise already_in if touched_in?
-    @entry_station = entry_station
+    @journey_log.start(@entry_station)
     @journey = true
   end
 
   def touch_out(exit_station)
-    @exit_station = exit_station
+    @exit_station = exit_station.name
+    @journey_log.finish(@exit_station)
     @journey = false
     deduct
-    save_history
   end
 
   private
@@ -61,7 +62,6 @@ class Card
     @balance - MAX_CHARGE < 0
   end
 
-
   def journey_balance
     @current_journey = Journey.new(@entry_station, @exit_station)
     @current_journey.fare
@@ -71,8 +71,4 @@ class Card
     @balance -= journey_balance
   end
 
-  def save_history
-    @history << ( {@entry_station.name => @exit_station.name} )
-  end
-  
 end

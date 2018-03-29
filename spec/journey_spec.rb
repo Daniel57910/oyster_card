@@ -1,4 +1,4 @@
-require 'app'
+require 'journey'
 
 describe "Journey" do
 
