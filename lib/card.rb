@@ -18,16 +18,16 @@ class Card
   end
 
   def touch_in(entry_station)
-    @entry_station = entry_station.name
+    @entry_station = entry_station
     raise not_enough if insufficient_funds?
     raise already_in if touched_in?
-    @journey_log.start(@entry_station)
+    @journey_log.start(@entry_station.name)
     @journey = true
   end
 
   def touch_out(exit_station)
-    @exit_station = exit_station.name
-    @journey_log.finish(@exit_station)
+    @exit_station = exit_station
+    @journey_log.finish(@exit_station.name)
     @journey = false
     deduct
   end
@@ -63,7 +63,7 @@ class Card
   end
 
   def journey_balance
-    @current_journey = Journey.new(@entry_station, @exit_station)
+    @current_journey = Journey.new(@entry_station.zone, @exit_station.zone)
     @current_journey.fare
   end
 

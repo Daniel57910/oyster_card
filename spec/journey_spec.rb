@@ -2,8 +2,11 @@ require 'journey'
 
 describe "Journey" do
 
-  subject(:kings_cross) {double(:station, :name => "Kings Cross")}
-  subject(:old_street) {double(:station, :name => "Old Street")}
+  subject(:kings_cross) { 1 } 
+  subject(:old_street) { 1 }
+  subject(:farringdon) { 1 }
+  subject(:watford) { 5 }
+  #mocking the zones
 
   describe "#fare" do
     it "returns the max fare (£6) if only one entry is entered" do
@@ -11,9 +14,9 @@ describe "Journey" do
       expect(journey.fare).to eq 6
     end
 
-    it "returns 1 if a legitimate move has been completed" do
-      journey = Journey.new(kings_cross, old_street)
-      expect(journey.fare).to eq 1
+    it "returns fare if a legitimate move has been completed" do
+      journey = Journey.new(farringdon, watford)
+      expect(journey.fare).to eq 5
     end
   end
 
