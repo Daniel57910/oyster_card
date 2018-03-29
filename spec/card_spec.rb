@@ -32,6 +32,10 @@ describe Card do
     it "raises an error if there are insufficient funds on card" do 
       expect {card.touch_in(kings_cross)}.to raise_error "Insufficient funds on card"
     end
+    it "raises an error if the user has tapped in already" do
+      card_money.touch_in(kings_cross)
+      expect {card_money.touch_in(paddington)}.to raise_error "Please touch out before beginning a new journey"
+    end
     it "changes the status of the journey to be true" do
       card_money.touch_in(kings_cross)
       expect(card_money.journey).to eq true
@@ -43,9 +47,7 @@ describe Card do
       card_money.touch_in(kings_cross)
       card_money.touch_out(paddington)
     end
-
-    #create completed journey subject
-    #test rspec against it: https://stackoverflow.com/questions/35125686/expect-the-creation-of-a-new-object
+    
     it "calls the private methods for deducting money and returns the balance" do
       expect(card_money.send(:deduct)).to eq card_money.balance
     end

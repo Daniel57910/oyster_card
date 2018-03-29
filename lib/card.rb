@@ -19,7 +19,7 @@ class Card
 
   def touch_in(entry_station)
     raise not_enough if insufficient_funds?
-    #raise error if try to touch in twice in a row
+    raise already_in if touched_in?
     @entry_station = entry_station
     @journey = true
   end
@@ -31,30 +31,44 @@ class Card
     save_history
   end
 
-  def in_station?
-    @journey
-  end
-
   private
 
   def too_much_message
    "The maximum you can hold on your card is 90"
   end
 
-  def too_much?
-    @balance + @amount > MAX
+  def already_in
+    "Please touch out before beginning a new journey"
   end
 
   def not_enough
     "Insufficient funds on card"
   end
 
-  def deduct
-    @balance -= @exit_station.cost
+  def too_much?
+    @balance + @amount > MAX
   end
 
   def insufficient_funds?
     @balance - MAX_CHARGE < 0
+  end
+
+  def touched_in?
+    @journey
+  end
+
+  def insufficient_funds?
+    @balance - MAX_CHARGE < 0
+  end
+
+
+  def journey_balance
+    @current_journey = Journey.new(@entry_station, @exit_station)
+    @current_journey.fare
+  end
+
+  def deduct
+    @balance -= journey_balance
   end
 
   def save_history
